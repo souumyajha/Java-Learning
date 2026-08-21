@@ -1,53 +1,60 @@
 package Trie;
 
 public class SearchInTrie {
-        static class Node{
+        static class Node {
             Node[] children;
             boolean endOfWord;
 
-            Node(){
+            Node() {
                 children = new Node[26];
+                for (int i = 0; i < 26; i++) {
+                    children[i] = null;
+                }
                 endOfWord = false;
             }
         }
-        static Node root = new Node();
+            static Node root = new Node();
 
-        public static void insert(String word){
-            Node curr = root;
-            for(int i = 0 ; i < word.length() ; i++) {
-                int ind = word.charAt(i) - 'a';
-                if (curr.children[ind] == null) {
-                    curr.children[ind] = new Node();
+            public static void insert(String words) {
+                Node curr = root;
+                for (int i = 0; i < words.length(); i++) {
+                    int ind = words.charAt(i) - 'a';
+                    Node node = curr.children[ind];
+                    if (node == null) {
+                        node = new Node();
+                        curr.children[ind] = node;
+                    }
+                    if (i == words.length() - 1) {
+                        node.endOfWord = true;
+                    }
+                    curr = node;
                 }
-                if (i == word.length() - 1) {
-                    curr.children[ind].endOfWord = true;
-                }
-                curr = curr.children[ind];
             }
+            public static boolean search(String key){
+                Node curr = root;
+                for(int i = 0 ; i < key.length() ; i++){
+                    int ind = key.charAt(i) - 'a';
+                    Node node = curr.children[ind];
+                    if(node == null){
+                        return false;
+                    }
+                    if(i == key.length() - 1 && node.endOfWord == false){
+                        return false;
+                    }
+                    curr = node;
+                }
+                return true;
+            }
+    public static void main(String[] args){
+        String[] words = {"the" , "their"};
+        for(String word : words){
+            insert(word);
         }
-
-        public static boolean search(String key){
-            Node curr = root;
-            for(int i = 0 ; i < key.length() ; i++){
-                int ind = key.charAt(i) - 'a';
-                if(curr.children[ind] == null){
-                    return false;
-                }else if(i == key.length() - 1 && curr.children[ind].endOfWord == false){
-                    return false;
-                }
-                curr = curr.children[ind];
-            }
-            return true;
-        }
-
-        public static void main(String[] args){
-            String[] words = { "the" , "there"};
-            for(String word : words){
-                insert(word);
-            }
-            System.out.println(search( "there"));
-            System.out.println(search( "thor"));
-            System.out.println(search( "and"));
+        System.out.println(search("the"));
         }
     }
+
+
+
+
 
